@@ -1,0 +1,208 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="~/demo/admincommonsections.master.cs" Inherits="admincommonsections" %>
+
+<!DOCTYPE html>
+<html lang="en" style="overflow-y:hidden;">
+
+<head runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Welcome Admin - Online Exam System</title>
+    <!-- Bootstrap core CSS-->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../assets/css/bootstrap.min.js"></script>
+    <!-- Custom fonts for this template-->
+    <link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="../assets/css/custom.css" rel="stylesheet">
+    <asp:ContentPlaceHolder ID="headplaceholder" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+    <div>
+    <form  runat="server" id="adminsmaster">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+        <a class="navbar-brand align-content-center" href="../demo/adminfront.aspx" >WORKFLOW SYSTEM</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                <li class="nav-item">
+                   <%-- <img src="../assets/logo/logo.png" alt="Logo Here" class="img-fluid rounded mx-auto d-block" width="100px" />--%>
+                     <div class="text-center" style="color:#FF6500;"><i class="fa fa-fw fa-user fa-3x"></i></div>
+                </li>
+                <li class="nav-item d-flex justify-content-center mt-3" data-toggle="tooltip" data-placement="right">              
+                    <span class="nav-link-text" style="font-size:18px;color:#FF6500;font-weight: 900;">WELCOME</span> 
+                    <asp:Label ID="Label1" class="nav-link-text mr-1 px-2 mt-0 pb-2" runat="server" style="background-color:#343A40;color:#FEF9E5;font-size:14px"></asp:Label>
+                </li>
+                      
+                          
+            </ul>
+            <ul class="navbar-nav sidenav-toggler">
+                <li class="nav-item">
+                    <a class="nav-link text-center" id="sidenavToggler">
+                        <i class="fa fa-fw fa-angle-left"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+               
+        
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user-circle" aria-hidden="true"></i>
+                        Admin Setup
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="../admin/AddAdmin.aspx">
+                            <i class="fa fa-user-secret" aria-hidden="true"></i>
+                          Add Admin/Role
+                        </a>
+                        <a class="dropdown-item" href="../admin/AddClient.aspx">
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            Add Clients
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <asp:LinkButton ID="link_loginout" runat="server" CssClass="nav-link" OnClick="link_loginout_Click">Log out</asp:LinkButton>
+                </li>
+            </ul>
+        </div>
+    </nav>
+         
+    <div class="content-wrapper" >
+        
+            <div class="container">
+                <!-- Icon Cards-->
+                <div class="row">
+
+                                                <div class="col-md-12" id="pad">
+        <div class="card">
+             <div class="btn-group bg-dark">
+                <asp:Button ID="Button1" runat="server" Text="QUICK LIVE REPORTING" style="background-color: #FF6500;border-radius:0px" CssClass="btn btn-info border-0" BorderStyle="None" CausesValidation="False" BackColor="#343A40" />
+            </div>
+            <div class="card-body">
+                <div class="row" style="height:auto">
+                     <div class="col-md-4 col-xl-4 col-sm-6 mb-4">
+                           <div class="">
+                                <div class="card text-white o-hidden h-100" style="background-color: #FF6500;">
+                                    <div class="card-body">
+                                        <div class="card-body-icon">
+                                            <i class="fa fa-fw fa-comments" style="width: 80px;"></i>
+                                        </div>
+                                        <div class="mr-3" style="letter-spacing:-0.8px;">We have total <span class="badge badge-primary badge-pill"><asp:Label ID="lbltotalPending" runat="server"></asp:Label></span>Pending Approval(s)</div>
+                                    </div>
+                                    <h3 class="card-footer text-white clearfix small z-1">
+                                        <span class="float-left">Reporting Live</span>
+                                        <span class="float-right">
+                                            <i class="fa fa-angle-right"></i>
+                                        </span>
+                                    </h3>
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="col-md-4 col-xl-4 col-sm-6 mb-4">
+                           <div class="">
+                                <div class="card text-white o-hidden h-100" style="background-color: #FF6500;">
+                                    <div class="card-body">
+                                        <div class="card-body-icon">
+                                            <i class="fa fa-fw fa-comments"></i>
+                                        </div>
+                                        <div class="mr-5">We have total <span class="badge badge-primary badge-pill"><asp:Label ID="lbltotalRegistered" runat="server"></asp:Label></span> Online Users</div>
+                                    </div>
+                                    <h3 class="card-footer text-white clearfix small z-1">
+                                        <span class="float-left">Reporting Live</span>
+                                        <span class="float-right">
+                                            <i class="fa fa-angle-right"></i>
+                                        </span>
+                                    </h3>
+                                </div>
+                            </div>
+                    </div>
+                     <div class="col-md-4 col-xl-4 col-sm-6 mb-4">
+                           <div class="" style="background-color: #1C5E55;">
+                                <div class="card text-white o-hidden h-100" style="background-color: #FF6500;">
+                                    <div class="card-body">
+                                        <div class="card-body-icon">
+                                            <i class="fa fa-fw fa-bitcoin"></i>
+                                        </div>
+                                        <div class="mr-5">We have total <span class="badge badge-primary badge-pill"><asp:Label ID="lbltotalClients" runat="server"></asp:Label></span> Clients</div>
+                                    </div>
+                                    <h3 class="card-footer text-white clearfix small z-1">
+                                        <span class="float-left">Reporting Live</span>
+                                        <span class="float-right">
+                                            <i class="fa fa-angle-right"></i>
+                                        </span>
+                                    </h3>
+                                </div>
+                            </div>   
+                    </div>
+                </div>
+              </div>
+        
+    
+ 		            <asp:Panel ID="pnl_warning" runat="server" Visible="False">
+                        <div class="card-footer">                           
+                            <div class="alert alert-danger text-center">
+                               <asp:Label ID="lbl_warning" runat="server" />
+                                 <button type="button" class="close" data-dismiss="alert">
+                                      <span>
+                                          &times;
+                                      </span>
+                             </button>
+                            </div>
+                        </div>
+                 	</asp:Panel>
+          
+         </div>
+     </div>
+
+
+                    <!-- main content goes here -->
+                    <asp:ContentPlaceHolder ID="maincontent" runat="server">
+                         
+                    </asp:ContentPlaceHolder>
+
+
+
+                </div>
+                  
+            </div>
+
+
+
+        
+        <!-- /.container-fluid-->
+        <!-- /.content-wrapper-->
+      
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fa fa-angle-up"></i>
+        </a>
+        <!-- Bootstrap core JavaScript-->
+        <script src="../assets/js/jquery.min.js"></script>
+        <script src="../assets/js/bootstrap.bundle.min.js"></script>
+        <script src="../assets/js/custom.js"></script>
+    </div>
+       </form>
+        </div>
+                     <footer class="sticky-footer mb-4">
+                        <div class="container">
+                            <div class="text-center">
+                                Copyright @ SEKAT <asp:Label ID="Label2" runat="server"></asp:Label>
+                            </div>
+                        </div>
+                    </footer>
+</body>  
+</html>
+
+
+
+

@@ -1,0 +1,831 @@
+CREATE DATABASE [workflow]
+
+USE [workflow]
+GO
+
+/****** Object:  Table [dbo].[admin]    Script Date: 4/15/2020 10:50:12 PM ******/
+SET ANSI_NULLS ON
+GO
+
+
+/****** Object:  User [IIS APPPOOL\DefaultAppPool]    Script Date: 4/18/2020 7:12:26 PM ******/
+CREATE USER [IIS APPPOOL\DefaultAppPool] FOR LOGIN [IIS APPPOOL\DefaultAppPool] WITH DEFAULT_SCHEMA=[dbo]
+GO
+
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[admin](
+	[admin_id] [int] IDENTITY(1,1) NOT NULL,
+	[admin_name] [nvarchar](500) NULL,
+	[admin_email] [nvarchar](50) NULL,
+	[admin_password] [nvarchar](50) NULL,
+	[roleid] [int] NULL,
+ CONSTRAINT [PK__admin__43AA4141A05400A3] PRIMARY KEY CLUSTERED 
+(
+	[admin_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[admin] ADD  CONSTRAINT [DF_admin_roleid]  DEFAULT ((0)) FOR [roleid]
+GO
+
+ALTER TABLE [dbo].[admin]  WITH CHECK ADD  CONSTRAINT [FK_admin_roles] FOREIGN KEY([roleid])
+REFERENCES [dbo].[roles] ([roleid])
+GO
+
+ALTER TABLE [dbo].[admin] CHECK CONSTRAINT [FK_admin_roles]
+GO
+
+
+
+CREATE TABLE [dbo].[clients](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](max) NULL,
+	[location] [nvarchar](max) NULL,
+	[amount] [nvarchar](max) NULL,
+	[task] [nvarchar](max) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+
+
+
+CREATE TABLE [dbo].[contact](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[client_name] [nvarchar](max) NULL,
+	[contact_person] [nvarchar](max) NULL,
+	[email] [nvarchar](max) NULL,
+	[phone] [nvarchar](max) NULL,
+ CONSTRAINT [PK_contact] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+
+
+CREATE TABLE [dbo].[master](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[fullname] [nvarchar](max) NULL,
+	[client_name] [nvarchar](max) NULL,
+	[client_location] [nvarchar](max) NULL,
+	[client_amount] [nvarchar](max) NULL,
+	[client_task] [nvarchar](max) NULL,
+	[applied_date] [nvarchar](max) NULL,
+	[approved_by] [nvarchar](max) NULL,
+ CONSTRAINT [PK_master] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[master] ADD  CONSTRAINT [DF_master_approved_by]  DEFAULT ('Pending') FOR [approved_by]
+GO
+
+
+
+
+
+CREATE TABLE [dbo].[roles](
+	[roleid] [int] IDENTITY(1,1) NOT NULL,
+	[rolename] [nvarchar](50) NULL,
+ CONSTRAINT [PK_roles] PRIMARY KEY CLUSTERED 
+(
+	[roleid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+INSERT INTO [dbo].[admin]
+           ([admin_name]
+           ,[admin_email]
+           ,[admin_password]
+           ,[roleid])
+     VALUES
+           ('sekat-admin',
+           'admin@admin.com',
+           'admin.admin',
+           1)
+GO
+
+
+
+
+create procedure [dbo].[masterEditTrail]
+as
+begin
+
+  select * from master
+		  
+end
+GO
+
+
+
+CREATE procedure [dbo].[masterSelectTrail]
+as
+begin
+
+select * from master order by case when approved_by = 'Pending' then 0 else 1 end, approved_by 
+
+end
+GO
+
+
+
+
+create procedure [dbo].[spAccessPrivileges]
+
+@roleid nvarchar(100), 
+@user nvarchar(50)
+
+as
+begin
+
+	-- insert into master(fullname,client_name,client_amount,client_task,applied_date,approved_by) values
+	--(@full,@clname,@clamount,@cltask,@appdate,@appby)
+
+	update admin set roleid = @roleid WHERE admin_name = @user
+		
+end
+GO
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spAddContactPerson]
+@cname  nvarchar(max),
+@cperson nvarchar(max) ,
+@cemail nvarchar(max) ,
+@cphone nvarchar(max) ,
+@cpersonout int = null output
+
+as
+begin
+		
+	if exists(select contact_person from contact where (client_name=@cname) and (contact_person=@cperson))
+		begin
+			--set @cpersonout = 1
+			--print @cpersonout
+			set @cpersonout = 0 
+		end
+	else
+		begin
+		   insert into contact(client_name,contact_person,email,phone)values(@cname,@cperson,@cemail,@cphone)
+		end
+						
+					 
+end
+GO
+
+
+
+
+
+CREATE procedure [dbo].[spAdminApproval]
+
+@id nvarchar(100), 
+@appby nvarchar(50)
+
+as
+begin
+
+	-- insert into master(fullname,client_name,client_amount,client_task,applied_date,approved_by) values
+	--(@full,@clname,@clamount,@cltask,@appdate,@appby)
+
+	update master set approved_by = @appby WHERE id = @id
+		
+end
+GO
+
+
+
+
+
+
+create procedure [dbo].[spAdminInsert]
+
+@name nvarchar(50),
+@email nvarchar(50),
+@password  nvarchar(100)
+as
+begin
+      declare @count int
+	  declare @returnvalue int
+	  select @count = COUNT(admin_email) from admin where admin_email=@email
+	      if @count>0
+		      begin
+			     set @returnvalue = -1
+				 end
+				 
+				 
+			else
+			  begin
+			     set @returnvalue = 1
+				 insert into admin(admin_name,admin_email,admin_password) values
+				 (@name,@email,@password)
+				 end
+		select @returnvalue as returnvalue
+end
+GO
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spAdminlogin]
+
+@admin_email nvarchar(50),
+@password nvarchar(100)
+as
+begin
+
+  Declare @count int
+  select @count =COUNT(admin_email) from admin
+  where admin_email=@admin_email and admin_password=@password
+
+
+  if (@count=1)
+        begin
+		    select @count
+			end
+			
+			
+	else
+	
+	    begin
+		 select -1
+		  end
+		  
+end
+GO
+
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spAdminSearchGrid]
+
+@admindrp nvarchar(max), 
+@admintxt nvarchar(max)
+
+as
+begin
+Declare @sql nvarchar(max)
+set @sql = 'select * from master where [@admindrp] = @admintxt'
+	
+	Execute sp_sqlexec @sql
+	
+	
+	--select* from master where['" + DropDownList1.SelectedItem.Text + "'] = '"+txtsearch.Text+"'
+		
+end
+GO
+
+
+
+
+
+CREATE procedure [dbo].[spAllPendingReporting]
+as
+begin
+
+  select count(*) from master where approved_by = 'Pending'
+		  
+end
+GO
+
+
+
+
+
+
+Create procedure [dbo].[spClientRegisterinsert]
+@name nvarchar(50),
+@location nvarchar(50),
+@amount  nvarchar(100),
+@task     nvarchar(100)
+as
+begin
+      declare @count int
+	  declare @email int
+	  declare @returnvalue int
+	  select @count = COUNT(name) from clients where name=@name
+	      if @count>0
+		      begin
+			     set @returnvalue = -1
+				 end
+				 
+				 
+			else
+			  begin
+			     set @returnvalue = 1
+				 insert into clients(name,location,amount,task) values
+				 (@name,@location,@amount,@task)
+				 end
+		select @returnvalue as returnvalue
+end
+GO
+
+
+
+
+
+
+CREATE procedure [dbo].[spClientselect]
+as
+begin
+
+  select * from clients
+		  
+end
+GO
+
+
+
+
+
+
+
+
+create procedure [dbo].[spClientselectCount]
+as
+begin
+
+  select count(*) from clients
+		  
+end
+GO
+
+
+
+
+
+
+CREATE procedure [dbo].[spDropdownIndexValuePicked]
+
+@clientnameselected nvarchar(500)
+as
+begin
+
+  select * from clients
+  where name=@clientnameselected
+		  
+end
+GO
+
+
+
+
+CREATE procedure [dbo].[spEachStaffPostingsGridSort]
+@fn nvarchar(50)
+as
+begin
+
+select * from master where fullname = @fn order by case when approved_by = 'Pending' then 0 else 1 end, approved_by 
+
+end
+GO
+
+
+
+
+create procedure [dbo].[spEmail]   
+	
+	@email nvarchar(max)
+	as
+	begin
+	select admin_email from admin where admin_email=@email
+	  
+end
+GO
+
+
+
+
+
+
+create procedure [dbo].[spGetContactPersonPerClientChosen]
+
+@cn nvarchar(50)
+
+as
+begin
+
+SELECT * from contact where contact_person = @cn
+
+end
+GO
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spMasterDeleteUsingImageIcon]
+@id int
+as
+begin
+
+delete from master where id = @id
+		  
+end
+GO
+
+
+
+
+
+CREATE procedure [dbo].[spMasterFilterBy]
+@dropdownlistselectedText nvarchar(50),
+@textboxInput nvarchar(100)
+as
+begin
+
+   declare @sql varchar(MAX) = ''
+
+   set @sql = 'SELECT * from master where ' + cast(@dropdownlistselectedText as nvarchar(100)) + '=' + cast(@textboxInput as nvarchar(100))
+
+   exec (@sql)
+  --select * from master where { @dropdownlistselectedText } = @textboxInput
+		  
+end
+GO
+
+
+
+
+
+CREATE procedure [dbo].[spMasterInsertSortPendingFirst]
+@fn nvarchar(max),
+@cn nvarchar(max),
+@cl nvarchar(max),
+@ca nvarchar(max),
+@ct nvarchar(max),
+@ad nvarchar(max)
+
+as
+begin
+      insert into master(fullname,client_name,client_location,client_amount,client_task,applied_date) values
+	  (@fn,@cn,@cl,@ca,@ct,@ad)
+	  
+end
+
+
+
+
+
+
+
+
+
+create procedure [dbo].[spMasterSortbyPendingONTop]
+as
+begin
+
+  select * from master order by case approved_by when 'Pending' then approved_by end desc
+		  
+end
+GO
+
+
+
+
+
+
+create procedure [dbo].[spMasterTBdelete]
+
+@id int
+as
+begin
+
+	Delete from master where id = @id
+		  
+end
+GO
+
+
+
+
+
+
+
+create procedure [dbo].[spPopulateContactDropdown]
+
+@cn nvarchar(50)
+
+as
+begin
+
+SELECT * from contact where client_name = @cn
+
+end
+GO
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spPostTasktoMasterTB]
+
+@fullname nvarchar(50),
+@cname nvarchar(50),
+@clocation  nvarchar(100),
+@camount  nvarchar(100),
+@ctask  nvarchar(100),
+@applieddate   nvarchar(100)
+
+
+as
+begin
+  
+				 insert into master(fullname,client_name,client_location,client_amount,client_task,applied_date) values
+				 (@fullname,@cname,@clocation,@camount,@ctask,@applieddate)
+				 
+end
+GO
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spRolesCreation]
+@rname  nvarchar(100)
+as
+begin
+			        declare @count int
+	  declare @returnvalue int
+	  select @count = COUNT(rolename) from roles where rolename=@rname
+	      if @count>0
+		      begin
+			     set @returnvalue = -1
+				 end
+				 
+				 
+			else
+			  begin
+			     set @returnvalue = 1
+				 insert into roles(rolename) values (@rname)
+				 		select @returnvalue as returnvalue
+
+				end
+end
+GO
+
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spRolesinsert]
+@rolena nvarchar(50)
+as
+begin
+      declare @count int
+	  declare @email int
+	  declare @returnvalue int
+	  select @count = COUNT(rolename) from roles where rolename=@rolena
+	      if @count>0
+		      begin
+			     set @returnvalue = -1
+				 end
+				 
+				 
+			else
+			  begin
+			     set @returnvalue = 1
+				 insert into roles(rolename) values
+				 (@rolena)
+				 end
+		select @returnvalue as returnvalue
+end
+GO
+
+
+
+
+
+CREATE procedure [dbo].[spSearchAmount]
+@fn nvarchar(max),
+@a nvarchar(max)
+as
+begin
+
+ SELECT* FROM master WHERE client_amount = @a and fullname = @fn order by case when(approved_by = 'Pending') then 0 else 1 end,approved_by
+		  
+end
+GO
+
+
+
+
+
+
+CREATE procedure [dbo].[spSearchApplied]
+@fn nvarchar(max),
+@ad nvarchar(max)
+as
+begin
+
+SELECT* FROM master WHERE applied_date = @ad and fullname = @fn order by case when(approved_by = 'Pending') then 0 else 1 end,approved_by
+ 
+end
+GO
+
+
+
+
+
+CREATE procedure [dbo].[spSearchApproval]
+@fn nvarchar(max),
+@ab nvarchar(max)
+as
+begin
+
+SELECT* FROM master WHERE approved_by = @ab and fullname = @fn order by case when(approved_by = 'Pending') then 0 else 1 end,approved_by
+ 
+end
+GO
+
+
+
+
+
+
+CREATE procedure [dbo].[spSearchClient]
+@fn nvarchar(max),
+@c nvarchar(max)
+as
+begin
+
+SELECT* FROM master WHERE client_name = @c and fullname = @fn order by case when(approved_by = 'Pending') then 0 else 1 end,approved_by
+		  
+end
+GO
+
+
+
+
+
+
+create procedure [dbo].[spSearchDefault]
+@fn nvarchar(max)
+as
+begin
+
+select * from master where fullname = @fn order by case when approved_by = 'Pending' then 0 else 1 end, approved_by 
+
+end
+GO
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spSearchStaff]
+@textbox nvarchar(max),
+@fn nvarchar(max)
+as
+begin
+
+select * from master where fullname = @fn and fullname = @textbox order by case when approved_by = 'Pending' then 0 else 1 end, approved_by 
+
+end
+GO
+
+
+
+
+
+
+CREATE procedure [dbo].[spSearchTask]
+@fn nvarchar(max),
+@ct nvarchar(max)
+as
+begin
+
+SELECT* FROM master WHERE client_task = @ct and fullname = @fn order by case when(approved_by = 'Pending') then 0 else 1 end,approved_by
+ 
+end
+GO
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spSessionLoggedinUser]
+
+@admin_email nvarchar(50)
+as
+begin
+
+ declare @count int
+ declare @returnvalue int
+
+  select admin_name,roleid from admin
+  where admin_email=@admin_email 
+  if (@count>1)
+        begin
+			 set @returnvalue = -1
+	    end
+
+end
+GO
+
+
+
+
+
+
+
+CREATE procedure [dbo].[spUpdateForgotPass]
+	@password nvarchar(max),
+	@email nvarchar(max)
+	as
+	begin
+	  update admin set admin_password= @password
+	  where admin_email=@email
+	  
+end
+GO
+
+
+
+
+
+CREATE procedure [dbo].[spUpdateMasterSortbyPendingONTop]
+	@id int,
+	@fullname nvarchar(MAX),
+	@cn nvarchar(MAX),
+	@cl nvarchar(MAX),
+	@ca nvarchar(MAX),
+	@ct nvarchar(MAX),
+	@ad nvarchar(MAX),
+	@ab nvarchar(MAX)
+	as
+	begin
+	  update master set fullname=@fullname, client_name=@cn,client_location=@cl, 
+	  client_amount=@ca, client_task=@ct,applied_date=@ad, approved_by=@ab
+	  where id=@id
+	  
+	  end
+GO
+
+
+
+
+
+Create procedure [dbo].[spUserLevelPrivileges]
+	@rid int,
+	@user nvarchar(max)
+	as
+	begin
+	  update admin set roleid=@rid
+	  where admin_name=@user
+	  
+	  end
+GO
+
+
+
+
+create procedure [dbo].[spEachStaffPostingsTotal]
+@fn nvarchar(50)
+as
+begin
+
+select * from master where fullname = @fn  
+
+end
+
+
+
+
+

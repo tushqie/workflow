@@ -1,0 +1,306 @@
+﻿:root{
+    --primary-color : #cc0000;
+    --secondary-color : #7c0000;
+
+
+}
+
+#txtaddress {
+    line-height: 3em;
+    font-size: x-small;
+    overflow-y: scroll;
+}
+
+/**{
+
+    box-sizing:border-box;
+    margin: 0;
+    padding: 0;
+}*/
+
+html, body {
+    
+    height: 100%;
+}
+
+body {
+    /*display: flex;
+    flex-direction: column;*/
+    background-color: black;
+}
+
+.content {
+    flex: 1 0 auto;
+   
+}
+
+
+.d-flex.justify-content-around.imole {
+    width: 86vw;
+}
+
+
+@media screen and (max-width: 1040px) {
+    div.d-flex.justify-content-around.imole {
+        width: 70vw;
+        padding-left: 10rem;
+    }
+    .fixed-top.d-flex.justify-content-around {
+        width: auto;
+    }
+}
+
+@media screen and (max-width: 930px) {
+    .fixed-top.d-flex.justify-content-around {
+        justify-content: center;
+    }
+
+    div#title {
+        padding-left: 1em;
+        width: 37em;
+        text-align: center;
+    }
+
+    div#welcome.text-light.text-center.imole {
+        margin-right: 2em;
+    }
+
+    div#logo {
+        padding-left: 3em;
+    }
+
+}
+
+
+    /*container stop move everything stop thead middle code*/
+    .container {
+        width: 95%;
+        margin: 0 auto;
+        padding: 10px;
+        background-color: #FF6500;
+        /*overflow: no-display;*/
+    }
+
+
+    .app-header {
+        background-color: #FF6500;
+        /*box-shadow: 3px 3px 10px #888;*/
+    }
+
+
+        /*align header content stack next each other*/
+
+        .app-header .container {
+            display: flex; /*align header content beside each other horizontally*/
+            flex-direction: column; /*align header content on top each other*/
+            align-items: center;
+            justify-content: center;
+            padding: 15px 10px;
+        }
+
+    div.logo {
+        display: flex;
+        /*justify-content: space-between;
+    align-content: space-around;*/
+    }
+
+    div.app-header.logo ul {
+        margin-bottom: 16px;
+        width: 170px;
+    }
+
+    img.logo.pt-2{
+        border-radius: 2em;
+    }
+
+    div.logo ul {
+        display: flex;
+        width: 500px;
+        list-style: none;
+        padding-left: 0;
+    }
+
+
+    @media(max-width: 1446px) {
+        div#shrinktable {
+            /*display: inline-grid;
+        grid-template-columns: 1fr 1fr;*/
+            display: flex;
+            flex-direction: column;
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+        }
+    }
+
+    @media screen and (max-width: 360px) {
+        div.text-light.text-center.imole {
+            width: 179px !important;
+        }
+    }
+
+
+div .subheader {
+    background-color: white;
+    margin-bottom: 0;
+    /*box-shadow: 3px 3px 10px #888;*/
+    margin: 0 auto 16px auto;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+}
+
+    .item.remove {
+        border: 0px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;
+        margin-bottom: 5px;
+        padding-bottom: 0px;
+    }
+
+        .grid .item {
+            /*display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;*/
+            display: flex;
+            flex-direction: column;
+            /*border: 0.5px #ccc solid;*/
+            padding: 0px;
+            border-bottom: 0.5px #ccc solid;
+            /*padding: 10px;*/
+            margin: 10px;
+            /*box-shadow: 0.5px 0.5px 0.5px #ccc;*/
+        }
+
+    .grid-b {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;
+        margin-bottom: 5px;
+        padding-bottom: 0px;
+    }
+
+        .grid-b .item {
+            /*display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;*/
+            display: flex;
+            flex-direction: column;
+            /*border: 0.5px #ccc solid;*/
+            padding: 0px;
+            border-bottom: 0.5px #ccc solid;
+            /*padding: 10px;*/
+            margin: 10px;
+            /*box-shadow: 0.5px 0.5px 0.5px #ccc;*/
+        }
+
+
+    div.grid.container {
+        background-color: #FF6500;
+        /*margin-top: 0px;*/
+    }
+
+    .app-footer {
+        flex-shrink: 0;
+        background: #f4f4f4;
+        color: #444;
+        padding: 10px;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+
+    div.app-footer > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        list-style: none;
+        padding-left: 0;
+    }
+
+    /*.app-footer ul li {
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+    }*/
+
+
+    div.app-footer {
+        padding: 0px;
+        width: 800px;
+        color: #FF6500;
+    }
+
+
+
+
+        div.app-footer ul li i {
+            font-size: 80px;
+        }
+
+
+    /*for large screens mdtoxl*/
+    @media(min-width: 768px) {
+        
+
+        .grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        div.content {
+            min-height: 90%;
+        }
+
+        /*for splash screens*/
+        #splash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1700px;
+            height: 60vh;
+            background-color: var(--primary-color);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s;
+        }
+
+            #splash img {
+                width: 200px;
+            }
+
+            #splash.fade {
+                opacity: 0;
+            }
+    }
+
+
+    /*smtoxs screens*/
+@media screen and (min-width: 200px) and (max-width: 760px) {
+
+    a#link_loginout.nav-link {
+        
+        padding-right: .4rem !important;
+        font-size: small !important;
+    }
+}
+
+
+@media (min-width: 992px) {
+
+    .myH {
+        margin-left: 5.333333%;
+    }
+
+}
+  
+
